@@ -381,5 +381,66 @@ describe("format.js", function() {
         })).to.equal('Easy come, easy go');
       });
     });
+
+
+    describe('hash, have a single key for N times, with hardcoded loopMax = 3', function() {
+      it("N < loopMax, '#{a} #{b} #{b}'.format({a:'Easy', b:'come'}) === 'Easy come come'", function() {
+        expect('#{a} #{b} #{b}'.format({
+          a: 'Easy',
+          b: 'come',
+        })).to.equal('Easy come come');
+      });
+      it("N > loopMax, '#{a} #{b} #{b} #{b} #{b}}'.format({a:'Easy', b:'come'}) === 'Easy come come come come'", function() {
+        expect('#{a} #{b} #{b} #{b} #{b}'.format({
+          a: 'Easy',
+          b: 'come',
+        })).to.equal('Easy come come come come');
+      });
+    });
+
+
+    describe('hash, have a dead loop, have a single key for N times, with hardcoded loopMax = 3', function() {
+      it("N < loopMax, '#{a} #{b} #{b}'.format({a:'Easy', b:'#{b}'}) === 'Easy #{b} #{b}'", function() {
+        expect('#{a} #{b} #{b}'.format({
+          a: 'Easy',
+          b: '#{b}',
+        })).to.equal('Easy #{b} #{b}');
+      });
+      it("N > loopMax, '#{a} #{b} #{b} #{b} #{b}}'.format({a:'Easy', b:'#{b}'}) === 'Easy #{b} #{b} #{b} #{b}'", function() {
+        expect('#{a} #{b} #{b} #{b} #{b}'.format({
+          a: 'Easy',
+          b: '#{b}',
+        })).to.equal('Easy #{b} #{b} #{b} #{b}');
+      });
+    });
+
+
+    describe('hash, have a nested hash, have a single key for N times, with hardcoded loopMax = 3', function() {
+      it("N < loopMax, '#{a} #{b} #{b}'.format({a:'Easy', b:'#{a}'}) === 'Easy Easy Easy'", function() {
+        expect('#{a} #{b} #{b}'.format({
+          a: 'Easy',
+          b: '#{a}',
+        })).to.equal('Easy Easy Easy');
+      });
+      it("N > loopMax, '#{a} #{b} #{b} #{b} #{b}}'.format({a:'Easy', b:'#{b}'}) === 'Easy Easy Easy Easy Easy'", function() {
+        expect('#{a} #{b} #{b} #{b} #{b}'.format({
+          a: 'Easy',
+          b: '#{a}',
+        })).to.equal('Easy Easy Easy Easy Easy');
+      });
+    });
+
+
+    describe( '(NOTE: WIRED case, NEVER use it in this way) hash, have a dead and extended hash, have a single key for N times, with hardcoded loopMax = 3', function() {
+      it("'#{a} #{b}'.format({a:'Easy', b:'#{a} #{b}'}) === 'Easy Easy Easy Easy #{a} #{b}' ", function() {
+        
+        var astring = '#{a} #{b}';
+        var kvs = { a: 'Easy', b: '#{a} #{b}'};
+        var result = astring.format(kvs);
+        //console.log( 'NOTE: astring = ', astring, ', kvs = ', kvs, ', result = ', result);
+        expect(result).to.equal('Easy Easy Easy Easy #{a} #{b}');
+      });
+    });
+
   });
 });

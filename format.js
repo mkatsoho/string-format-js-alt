@@ -244,8 +244,19 @@
 
       if (args.length === 1 && typeof args[0] === 'object') {
         for (i=0; i < Object.keys(args[0]).length; i+=1) {
-          if (result.match(/(#\{\w+\})/)) {
+
+          // New feature: handle such scenario - the string has multiple (not only one) of a single hash key
+          // NOTE: using '*2' not '*1' in case such senario like {a: '#{b}', b: 'value'}, or like {a: '#{b} #{c}'}
+          var loopMax = result.match((/(#\{\w+\})/g));
+          var loopMax = loopMax ? loopMax.length * 2 : 0;  // TODO, let end-user can change 2 to any number
+          //SKIP TEST:          var loopMax = 3;   // TODO hardcoded, for testing only
+
+          var loopInd = 0;
+          while (result.match(/(#\{\w+\})/)) {
+            if (loopInd >= loopMax) { break; }
+            // SKIP console.log('args[i] with i = ', i, 'loop# =', loopInd, ', handling key =', (result.match(/(#\{\w+\})/))['0'] );  // TODO debug log for testing
             result = new Formatter(RegExp.$1).format(result, args[0]);
+            loopInd ++;     
           }
         }
       }

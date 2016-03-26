@@ -1,3 +1,27 @@
+# string-format-js-alt
+
+a clone of project string-format-js, which supports further scenarios (refer to test cases for details)
+
+## new scenarios
+
+workable
+- '#{a} #{a} #{a}'.format({a:'Easy'})
+- '#{a} #{b} #{b}'.format({a:'Easy', b:'#{a}'}) 
+
+workable but not suggested
+- '#{a} #{b}'.format({a:'Easy', b:'#{a} #{b}'})
+
+
+## quick sample
+
+```javascript
+require('string-format-js-alt');
+console.log( '#{a} #{a} #{a}'.format({a:'Easy'}) );
+```
+
+
+Below is the original project. 
+
 # string-format-js
 
 [![Build Status](https://travis-ci.org/tmaeda1981jp/string-format-js.png?branch=master)](https://travis-ci.org/tmaeda1981jp/string-format-js)
